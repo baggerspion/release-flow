@@ -28,4 +28,4 @@ jobs:
                   --generate-notes
             - name: Deploy To Production
               run: |
-                echo "Imagine the container being pushed to production here"
+                echo "Build and upload container ($tag)"
