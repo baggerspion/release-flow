@@ -1,5 +1,9 @@
 name: Create release
 
+concurrency: 
+    group: production
+    cancel-in-progress: true
+
 on:
     push:
         tags:
@@ -11,7 +15,7 @@ permissions:
 jobs:
     release:
         name: Release
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         steps:
             - name: Create Release
               env:
@@ -22,3 +26,6 @@ jobs:
                   --repo="$GITHUB_REPOSITORY" \
                   --title="${tag#v}" \
                   --generate-notes
+            - name: Deploy To Production
+              run: |
+                echo: "Imagine the container being pushed to production here"
