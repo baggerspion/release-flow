@@ -1,4 +1,4 @@
-name: Create release
+name: Production Deploy
 
 concurrency: 
     group: production
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
     release:
-        name: Release
+        name: Create Release
         runs-on: ubuntu-latest
         steps:
             - name: Create Release
