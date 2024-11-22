@@ -17,8 +17,10 @@ jobs:
         name: Deploy
         runs-on: ubuntu-latest
         steps:
-            - name: Deploy To Development
-              env:
-                tag: ${{ github.ref_name }}
-              run: |
-                echo "Build and upload container ($tag)"
+          - name: Set short git commit SHA
+            run: |
+              calculatedSha=$(git rev-parse --short ${{ github.sha }})
+              echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+          - name: Deploy To Development
+            run: |
+              echo "Build and upload container (${{ env.COMMIT_SHORT_SHA }})"
