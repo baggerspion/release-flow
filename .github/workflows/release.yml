@@ -27,5 +27,7 @@ jobs:
                   --title="${tag#v}" \
                   --generate-notes
             - name: Deploy To Production
+              env:
+                tag: ${{ github.ref_name }}
               run: |
                 echo "Build and upload container ($tag)"
