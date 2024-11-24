@@ -1,4 +1,4 @@
-name: Create Release
+name: Create Release & Deploy To Production
 
 on:
     push:
@@ -7,9 +7,16 @@ on:
 
 jobs:
     release:
-        name: Create Release
+        permissions:
+            packages: write
+            contents: read
+
+        name: Release To Production
         runs-on: ubuntu-latest
+        
         steps:
+            - uses: actions/checkout@v4
+
             - name: Create Release
               env:
                 GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -19,3 +26,12 @@ jobs:
                   --repo="$GITHUB_REPOSITORY" \
                   --title="${tag#v}" \
                   --generate-notes
+
+            - name: Build image
+              run: docker build . --file src/Dockerfile --tag release-flow:v${{ github.ref_name }}
+    
+            - name: Log in to registry
+              run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+    
+            - name: Publish container
+              run: docker push ghcr.io/baggerspion/release-flow:v${{ github.ref_name }}
