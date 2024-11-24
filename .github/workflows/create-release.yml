@@ -1,16 +1,9 @@
-name: Production Deploy
-
-concurrency: 
-    group: production
-    cancel-in-progress: true
+name: Create Release
 
 on:
     push:
         tags:
-        - "v*"
-
-permissions:
-    contents: write
+            - "v*"
 
 jobs:
     release:
@@ -26,8 +19,3 @@ jobs:
                   --repo="$GITHUB_REPOSITORY" \
                   --title="${tag#v}" \
                   --generate-notes
-            - name: Deploy To Production
-              env:
-                tag: ${{ github.ref_name }}
-              run: |
-                echo "Build and upload container ($tag)"
