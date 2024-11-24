@@ -1,4 +1,4 @@
-name: Create Release & Deploy To Production
+name: Create Release & Deploy To Dev
 
 on:
     push:
@@ -25,14 +25,18 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Get short sha
+              id: sha
+              run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
             - name: Create release
               env:
                 GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-                tag: ${{ github.ref_name }}
+                tag: ${{ steps.sha.outputs.sha_short }}
               run: |
-                gh release create "$tag" \
+                gh release create "pre-${tag}" \
                   --repo="$GITHUB_REPOSITORY" \
-                  --title="pre-${tag#v}" \
+                  --title="pre-${tag}" \
                   --prerelease \
                   --generate-notes
 
